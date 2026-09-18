@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M.F. Husain | The Horse Series</title>
+    
+    <!-- Fonts: Cormorant Garamond, Playfair Display & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        gallery: {
+                            bg: '#0A0908',
+                            surface: '#141210',
+                            card: '#1C1917',
+                            border: '#2E2A27',
+                            accent: '#D4AF37', // Gold
+                            accentGlow: 'rgba(212, 175, 55, 0.15)',
+                            rust: '#A84227', // Signature Husain terracotta tone
+                            muted: '#A1A1AA',
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['"Cormorant Garamond"', 'serif'],
+                        display: ['"Playfair Display"', 'serif'],
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Custom Scrollbar and Canvas Styles */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0A0908;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #2E2A27;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #D4AF37;
+        }
+
+        .gold-gradient-text {
+            background: linear-gradient(135deg, #FFF0CA 0%, #D4AF37 50%, #AA7C11 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .gold-border-glow {
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.12);
+        }
+
+        .glass-panel {
+            background: rgba(20, 18, 16, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+        }
+
+        /* SVG Art Canvas stroke smooth look */
+        canvas {
+            touch-action: none;
+        }
+
+        /* Hero Animation Pulse */
+        @keyframes subtlePulse {
+            0%, 100% { opacity: 0.8; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.02); }
+        }
+        .animate-subtle {
+            animation: subtlePulse 8s infinite ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-gallery-bg text-stone-200 font-sans antialiased selection:bg-gallery-accent selection:text-black">
+
+    <!-- Navigation Bar -->
+    <nav class="fixed top-0 left-0 right-0 z-40 border-b border-gallery-border/50 glass-panel transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+            <a href="#" class="flex items-center gap-3 group">
+                <div class="w-10 h-10 rounded-full border border-gallery-accent/50 flex items-center justify-center bg-gallery-card group-hover:border-gallery-accent transition-colors">
+                    <span class="font-serif text-xl font-bold text-gallery-accent">MFH</span>
+                </div>
+                <div>
+                    <span class="font-serif text-xl font-bold tracking-wider text-stone-100 block leading-none">M.F. HUSAIN</span>
+                    <span class="text-[10px] tracking-widest uppercase text-gallery-accent/80 font-mono">The Horse Retrospective</span>
+                </div>
+            </a>
+
+            <!-- Desktop Links -->
+            <div class="hidden md:flex items-center space-x-8 text-sm uppercase tracking-widest text-stone-400">
+                <a href="#gallery" class="hover:text-gallery-accent transition-colors">Gallery</a>
+                <a href="#about" class="hover:text-gallery-accent transition-colors">Fascination</a>
+                <a href="#timeline" class="hover:text-gallery-accent transition-colors">Timeline</a>
+                <a href="#studio" class="hover:text-gallery-accent transition-colors">Studio Canvas</a>
+            </div>
+
+            <!-- Ambient Audio & Mobile Menu Button -->
+            <div class="flex items-center gap-4">
+                <button id="audioToggleBtn" title="Toggle Ambient Gallery Sounds" 
+                    class="px-3 py-1.5 rounded-full border border-gallery-border bg-gallery-card/80 hover:border-gallery-accent/60 text-xs text-stone-300 flex items-center gap-2 transition-all">
+                    <i class="fa-solid fa-volume-xmark text-gallery-accent" id="audioIcon"></i>
+                    <span class="hidden sm:inline" id="audioText">Gallery Ambiance: Off</span>
+                </button>
+
+                <button id="mobileMenuBtn" class="md:hidden text-stone-300 hover:text-white p-2">
+                    <i class="fa-solid fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Nav -->
+        <div id="mobileMenu" class="hidden md:hidden border-t border-gallery-border/40 bg-gallery-surface px-6 py-4 flex-col space-y-3 text-sm tracking-widest uppercase">
+            <a href="#gallery" class="hover:text-gallery-accent transition-colors py-1">Gallery</a>
+            <a href="#about" class="hover:text-gallery-accent transition-colors py-1">Fascination</a>
+            <a href="#timeline" class="hover:text-gallery-accent transition-colors py-1">Timeline</a>
+            <a href="#studio" class="hover:text-gallery-accent transition-colors py-1">Studio Canvas</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="relative min-h-screen flex items-center pt-24 pb-16 overflow-hidden border-b border-gallery-border/60">
+        <!-- Background Ambient Glows -->
+        <div class="absolute top-1/4 -left-20 w-96 h-96 bg-gallery-rust/20 rounded-full blur-[120px] pointer-events-none"></div>
+        <div class="absolute bottom-10 right-0 w-[500px] h-[500px] bg-gallery-accent/10 rounded-full blur-[150px] pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10 w-full">
+            
+            <div class="lg:col-span-7 space-y-6">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-gallery-accent/30 bg-gallery-accent/5 text-gallery-accent text-xs font-mono uppercase tracking-widest">
+                    <span class="w-1.5 h-1.5 rounded-full bg-gallery-accent animate-ping"></span>
+                    Interactive Retrospective
+                </div>
+                
+                <h1 class="font-serif text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight text-stone-100 leading-[1.05]">
+                    Untamed <br>
+                    <span class="gold-gradient-text italic font-normal">Vitality & Power</span>
+                </h1>
+
+                <p class="text-stone-400 text-lg md:text-xl font-light leading-relaxed max-w-2xl">
+                    "My horses, like lightning, cut through many barriers... like the sun, they emanate unbounded force." 
+                    Explore Maqbool Fida Husain's legendary equine oeuvre—a synthesis of Indian mythology, Chinese ink vigor, and Western cubist dynamism.
+                </p>
+
+                <div class="pt-4 flex flex-wrap gap-4 items-center">
+                    <a href="#gallery" class="px-8 py-3.5 bg-gallery-accent text-black font-semibold tracking-wide rounded-md hover:bg-yellow-400 transition-colors shadow-lg shadow-gallery-accent/20 flex items-center gap-3">
+                        <span>Explore Artworks</span>
+                        <i class="fa-solid fa-arrow-down text-sm"></i>
+                    </a>
+                    <a href="#studio" class="px-8 py-3.5 border border-gallery-border bg-gallery-card/50 hover:bg-gallery-card hover:border-gallery-accent/50 text-stone-300 transition-all rounded-md flex items-center gap-3">
+                        <i class="fa-solid fa-palette text-gallery-accent"></i>
+                        <span>Paint Husain Style</span>
+                    </a>
+                </div>
+
+                <!-- Quick Stats Grid -->
+                <div class="grid grid-cols-3 gap-6 pt-10 border-t border-gallery-border/60 max-w-lg">
+                    <div>
+                        <div class="font-serif text-3xl font-bold text-stone-200">1950s</div>
+                        <div class="text-xs text-stone-500 uppercase tracking-wider mt-1">Motif Genesis</div>
+                    </div>
+                    <div>
+                        <div class="font-serif text-3xl font-bold text-gallery-accent">100+</div>
+                        <div class="text-xs text-stone-500 uppercase tracking-wider mt-1">Master Equine Works</div>
+                    </div>
+                    <div>
+                        <div class="font-serif text-3xl font-bold text-stone-200">Global</div>
+                        <div class="text-xs text-stone-500 uppercase tracking-wider mt-1">Acclaim & Auctions</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Featured Artwork Hero Showcase Canvas/SVG -->
+            <div class="lg:col-span-5 relative">
+                <div class="relative mx-auto max-w-md lg:max-w-none rounded-2xl p-2 bg-gradient-to-b from-gallery-accent/20 via-gallery-border to-transparent gold-border-glow">
+                    <div class="relative bg-gallery-card rounded-xl overflow-hidden group">
+                        <!-- Custom Dynamic Vector Representation of Husain's Horse -->
+                        <div class="relative aspect-[4/5] bg-stone-950 flex items-center justify-center p-6 overflow-hidden">
+                            <!-- Background Art Graphics -->
+                            <div class="absolute inset-0 opacity-40 bg-[radial-gradient(#d4af37_1px,transparent_1px)] [background-size:16px_16px]"></div>
+                            
+                            <!-- Stylized Dynamic Canvas SVG Representation of Husain Horse -->
+                            <svg class="w-full h-full text-stone-100 transform group-hover:scale-105 transition-transform duration-700 ease-out" viewBox="0 0 500 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M 120 500 L 180 320 L 250 220 L 320 180 L 410 120 L 370 190 L 310 240 L 260 280 L 230 380 L 290 520" stroke="#D4AF37" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M 250 220 L 280 100 L 330 80 L 340 130 L 310 170" stroke="#A84227" stroke-width="10" fill="#A84227" fill-opacity="0.3" stroke-linecap="round"/>
+                                <path d="M 180 320 L 80 280 L 110 240 L 200 270" stroke="#E2E8F0" stroke-width="8" stroke-linecap="round"/>
+                                <path d="M 310 240 L 420 280 L 460 380 L 380 350 L 330 420" stroke="#D4AF37" stroke-width="8" stroke-linecap="round"/>
+                                <circle cx="310" cy="115" r="8" fill="#FFF0CA"/>
+                                <!-- Bold Expressionist Brush Strokes -->
+                                <path d="M 50 480 Q 150 400 280 470 T 450 430" stroke="#E2E8F0" stroke-width="14" stroke-opacity="0.7" stroke-linecap="round"/>
+                                <path d="M 150 160 L 220 120 L 200 80" stroke="#A84227" stroke-width="12" stroke-linecap="round"/>
+                            </svg>
+
+                            <div class="absolute bottom-0 inset-x-0 p-6 bg-gradient-to-t from-black via-black/80 to-transparent">
+                                <span class="text-xs uppercase font-mono tracking-widest text-gallery-accent">Masterpiece Spotlight</span>
+                                <h3 class="font-serif text-2xl font-bold text-white">Equine Surge (1971)</h3>
+                                <p class="text-stone-400 text-xs mt-1">Oil & Acrylic on Canvas • Expressionist Period</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </header>
+
+    <!-- Main Interactive Gallery Section -->
+    <section id="gallery" class="py-24 px-6 max-w-7xl mx-auto">
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+            <div>
+                <span class="text-xs font-mono text-gallery-accent uppercase tracking-widest">Curated Collection</span>
+                <h2 class="font-serif text-4xl md:text-5xl font-bold text-stone-100 mt-1">The Horse Series</h2>
+                <p class="text-stone-400 text-sm mt-2 max-w-xl">
+                    Filter through M.F. Husain’s iconic equestrian masterworks across eras, mediums, and artistic movements.
+                </p>
+            </div>
+
+            <!-- Filter Buttons -->
+            <div class="flex flex-wrap gap-2" id="filterContainer">
+                <button data-filter="all" class="filter-btn px-4 py-2 rounded-md text-xs font-medium uppercase tracking-wider bg-gallery-accent text-black transition-all">All Masterpieces</button>
+                <button data-filter="expressionist" class="filter-btn px-4 py-2 rounded-md text-xs font-medium uppercase tracking-wider bg-gallery-card border border-gallery-border text-stone-300 hover:border-gallery-accent transition-all">Expressionist</button>
+                <button data-filter="mythology" class="filter-btn px-4 py-2 rounded-md text-xs font-medium uppercase tracking-wider bg-gallery-card border border-gallery-border text-stone-300 hover:border-gallery-accent transition-all">Epic & Mythology</button>
+                <button data-filter="oil" class="filter-btn px-4 py-2 rounded-md text-xs font-medium uppercase tracking-wider bg-gallery-card border border-gallery-border text-stone-300 hover:border-gallery-accent transition-all">Oils & Acrylics</button>
+                <button data-filter="monochrome" class="filter-btn px-4 py-2 rounded-md text-xs font-medium uppercase tracking-wider bg-gallery-card border border-gallery-border text-stone-300 hover:border-gallery-accent transition-all">Charcoal & Ink</button>
+            </div>
+        </div>
+
+        <!-- Gallery Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="galleryGrid">
+            <!-- Dynamic Artwork Cards generated via JS -->
+        </div>
+    </section>
+
+    <!-- The Fascination Section -->
+    <section id="about" class="py-24 bg-gallery-surface border-y border-gallery-border/60 relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                
+                <div class="lg:col-span-6 space-y-6">
+                    <span class="text-xs font-mono text-gallery-accent uppercase tracking-widest">Iconography & Symbolism</span>
+                    <h2 class="font-serif text-4xl md:text-5xl font-bold text-stone-100">Why the Horse?</h2>
+                    
+                    <p class="text-stone-300 leading-relaxed">
+                        M.F. Husain’s obsession with horses was neither accidental nor purely aesthetic. It was rooted deep within his childhood memories, spiritual tradition, and encounters with global art movements.
+                    </p>
+
+                    <div class="space-y-4 pt-2">
+                        <div class="p-4 rounded-lg bg-gallery-card border border-gallery-border/80 flex gap-4 items-start">
+                            <div class="w-10 h-10 rounded-full bg-gallery-accent/10 border border-gallery-accent/30 flex items-center justify-center shrink-0 text-gallery-accent">
+                                <i class="fa-solid fa-moon"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-serif text-lg font-bold text-stone-100">Duldul & Muharram Processions</h4>
+                                <p class="text-stone-400 text-sm mt-1">As a boy in Indore, Husain witnessed the ceremonial wooden horses (Duldul) carried during Muharram. The fiery spirit and sculpted posture left an indelible mark on his artistic soul.</p>
+                            </div>
+                        </div>
+
+                        <div class="p-4 rounded-lg bg-gallery-card border border-gallery-border/80 flex gap-4 items-start">
+                            <div class="w-10 h-10 rounded-full bg-gallery-accent/10 border border-gallery-accent/30 flex items-center justify-center shrink-0 text-gallery-accent">
+                                <i class="fa-solid fa-globe"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-serif text-lg font-bold text-stone-100">Global Synthesis: Xu Beihong & Marini</h4>
+                                <p class="text-stone-400 text-sm mt-1">In 1952, Husain traveled to China and studied master painter Xu Beihong's sweeping ink brushstrokes. Later in Europe, Marino Marini's equestrian sculptures inspired his bold structural geometry.</p>
+                            </div>
+                        </div>
+
+                        <div class="p-4 rounded-lg bg-gallery-card border border-gallery-border/80 flex gap-4 items-start">
+                            <div class="w-10 h-10 rounded-full bg-gallery-accent/10 border border-gallery-accent/30 flex items-center justify-center shrink-0 text-gallery-accent">
+                                <i class="fa-solid fa-bolt"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-serif text-lg font-bold text-stone-100">Unbridled Energy & Modernity</h4>
+                                <p class="text-stone-400 text-sm mt-1">For Husain, the horse was a symbol of post-independence India—restless, galloping forward with raw kinetic energy, defying boundaries and static traditions.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Visual Collage Showcase -->
+                <div class="lg:col-span-6 relative">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="space-y-4">
+                            <div class="rounded-lg overflow-hidden border border-gallery-border bg-gallery-card p-3">
+                                <div class="aspect-[3/4] bg-stone-900 rounded relative overflow-hidden flex items-center justify-center">
+                                    <svg viewBox="0 0 300 400" class="w-full h-full p-4">
+                                        <path d="M 50 350 L 120 200 L 220 150 L 260 80 L 210 120 L 170 190 L 110 280 L 50 350" stroke="#A84227" stroke-width="8" fill="none"/>
+                                        <path d="M 220 150 L 240 50 L 270 90" stroke="#D4AF37" stroke-width="6" fill="none"/>
+                                    </svg>
+                                    <span class="absolute bottom-2 left-2 text-[10px] font-mono text-stone-400 bg-black/60 px-2 py-0.5 rounded">Kinetic Lines</span>
+                                </div>
+                            </div>
+                            <div class="rounded-lg border border-gallery-accent/30 bg-gallery-accent/5 p-6 text-center">
+                                <span class="font-serif text-3xl font-bold text-gallery-accent block">1950</span>
+                                <span class="text-xs uppercase tracking-widest text-stone-400">First Horse Painting exhibited in Mumbai</span>
+                            </div>
+                        </div>
+
+                        <div class="space-y-4 pt-8">
+                            <div class="rounded-lg border border-gallery-border bg-gallery-card p-6">
+                                <blockquote class="font-serif italic text-stone-300 text-sm leading-relaxed">
+                                    "When I press the brush against canvas, the horse rears up within me. It is not an animal; it is power incarnate."
+                                </blockquote>
+                                <span class="block text-xs font-mono text-gallery-accent mt-3">— M.F. Husain</span>
+                            </div>
+                            <div class="rounded-lg overflow-hidden border border-gallery-border bg-gallery-card p-3">
+                                <div class="aspect-square bg-stone-900 rounded relative overflow-hidden flex items-center justify-center">
+                                    <svg viewBox="0 0 300 300" class="w-full h-full p-4">
+                                        <circle cx="150" cy="150" r="100" stroke="#D4AF37" stroke-width="2" stroke-dasharray="6 6"/>
+                                        <path d="M 80 200 L 150 100 L 220 200 Z" stroke="#E2E8F0" stroke-width="6" fill="none"/>
+                                    </svg>
+                                    <span class="absolute bottom-2 left-2 text-[10px] font-mono text-stone-400 bg-black/60 px-2 py-0.5 rounded">Cubist Geometry</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Timeline Section -->
+    <section id="timeline" class="py-24 max-w-7xl mx-auto px-6">
+        <div class="text-center max-w-2xl mx-auto mb-16">
+            <span class="text-xs font-mono text-gallery-accent uppercase tracking-widest">Chronology of a Vision</span>
+            <h2 class="font-serif text-4xl md:text-5xl font-bold text-stone-100 mt-2">The Equine Timeline</h2>
+            <p class="text-stone-400 text-sm mt-3">Follow the evolution of Husain’s horse motif through six pivotal decades of his legendary career.</p>
+        </div>
+
+        <div class="relative border-l-2 border-gallery-border md:mx-auto md:max-w-4xl space-y-12 pl-6 md:pl-10" id="timelineContainer">
+            <!-- Timeline Item 1 -->
+            <div class="relative group">
+                <div class="absolute -left-[31px] md:-left-[47px] top-1.5 w-5 h-5 rounded-full bg-gallery-card border-2 border-gallery-accent group-hover:bg-gallery-accent transition-colors"></div>
+                <div class="bg-gallery-card border border-gallery-border p-6 rounded-xl hover:border-gallery-accent/50 transition-all">
+                    <span class="text-xs font-mono text-gallery-accent font-semibold uppercase tracking-wider">1930s – 1940s</span>
+                    <h3 class="font-serif text-2xl font-bold text-stone-100 mt-1">Cinema Billboard Beginnings</h3>
+                    <p class="text-stone-400 text-sm mt-2 leading-relaxed">
+                        Husain paints massive Bollywood movie posters in Mumbai. This early exposure to colossal canvas sizes and swift brushwork installs a monumental sense of scale that later defines his horse canvases.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Timeline Item 2 -->
+            <div class="relative group">
+                <div class="absolute -left-[31px] md:-left-[47px] top-1.5 w-5 h-5 rounded-full bg-gallery-card border-2 border-gallery-accent group-hover:bg-gallery-accent transition-colors"></div>
+                <div class="bg-gallery-card border border-gallery-border p-6 rounded-xl hover:border-gallery-accent/50 transition-all">
+                    <span class="text-xs font-mono text-gallery-accent font-semibold uppercase tracking-wider">1952</span>
+                    <h3 class="font-serif text-2xl font-bold text-stone-100 mt-1">The Beijing Encounter with Xu Beihong</h3>
+                    <p class="text-stone-400 text-sm mt-2 leading-relaxed">
+                        Visiting China with a cultural delegation, Husain observes Xu Beihong painting galloping horses with traditional ink wash techniques. Husain synthesizes Chinese calligraphic fluidity with Indian folk vigor.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Timeline Item 3 -->
+            <div class="relative group">
+                <div class="absolute -left-[31px] md:-left-[47px] top-1.5 w-5 h-5 rounded-full bg-gallery-card border-2 border-gallery-accent group-hover:bg-gallery-accent transition-colors"></div>
+                <div class="bg-gallery-card border border-gallery-border p-6 rounded-xl hover:border-gallery-accent/50 transition-all">
+                    <span class="text-xs font-mono text-gallery-accent font-semibold uppercase tracking-wider">1960s – 1970s</span>
+                    <h3 class="font-serif text-2xl font-bold text-stone-100 mt-1">Peak Expressionist Series & 'Lightning'</h3>
+                    <p class="text-stone-400 text-sm mt-2 leading-relaxed">
+                        Husain executes landmark works including the massive 60-foot mural 'Lightning' (1975) featuring twelve galloping horses. The period marks his most aggressive use of impasto, thick black contours, and raw energy.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Timeline Item 4 -->
+            <div class="relative group">
+                <div class="absolute -left-[31px] md:-left-[47px] top-1.5 w-5 h-5 rounded-full bg-gallery-card border-2 border-gallery-accent group-hover:bg-gallery-accent transition-colors"></div>
+                <div class="bg-gallery-card border border-gallery-border p-6 rounded-xl hover:border-gallery-accent/50 transition-all">
+                    <span class="text-xs font-mono text-gallery-accent font-semibold uppercase tracking-wider">1980s – 2000s</span>
+                    <h3 class="font-serif text-2xl font-bold text-stone-100 mt-1">Mythological Epic Integration</h3>
+                    <p class="text-stone-400 text-sm mt-2 leading-relaxed">
+                        Horses become central protagonists in his Mahabharata and Ramayana series, pulling divine chariots, symbolizing the passage of time, human struggle, and cosmic victory.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Studio Canvas Section -->
+    <section id="studio" class="py-24 bg-gallery-surface border-t border-gallery-border/60">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center max-w-2xl mx-auto mb-12">
+                <span class="text-xs font-mono text-gallery-accent uppercase tracking-widest">Interactive Atelier</span>
+                <h2 class="font-serif text-4xl md:text-5xl font-bold text-stone-100 mt-2">In the Style of Husain</h2>
+                <p class="text-stone-400 text-sm mt-2">Channel the master's energetic expressionism. Use bold brush strokes, golden ochres, terracotta reds, and deep charcoal contours.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                <!-- Canvas Control Panel -->
+                <div class="lg:col-span-4 bg-gallery-card border border-gallery-border p-6 rounded-xl space-y-6">
+                    <h3 class="font-serif text-xl font-bold text-stone-100 border-b border-gallery-border pb-3 flex items-center justify-between">
+                        <span>Palette & Brush</span>
+                        <i class="fa-solid fa-paint-brush text-gallery-accent text-sm"></i>
+                    </h3>
+
+                    <!-- Color Selectors -->
+                    <div>
+                        <label class="text-xs uppercase tracking-wider text-stone-400 block mb-3 font-mono">Husain Palette Colors</label>
+                        <div class="flex flex-wrap gap-3" id="colorPalette">
+                            <button data-color="#D4AF37" class="color-btn w-9 h-9 rounded-full bg-[#D4AF37] ring-2 ring-offset-2 ring-offset-gallery-card ring-gallery-accent transition-all"></button>
+                            <button data-color="#A84227" class="color-btn w-9 h-9 rounded-full bg-[#A84227] hover:scale-110 transition-all"></button>
+                            <button data-color="#1E293B" class="color-btn w-9 h-9 rounded-full bg-[#1E293B] hover:scale-110 transition-all border border-stone-600"></button>
+                            <button data-color="#F8FAFC" class="color-btn w-9 h-9 rounded-full bg-[#F8FAFC] hover:scale-110 transition-all"></button>
+                            <button data-color="#0F172A" class="color-btn w-9 h-9 rounded-full bg-[#0F172A] hover:scale-110 transition-all border border-stone-700"></button>
+                            <button data-color="#000000" class="color-btn w-9 h-9 rounded-full bg-black hover:scale-110 transition-all border border-stone-700"></button>
+                        </div>
+                    </div>
+
+                    <!-- Brush Size Slider -->
+                    <div>
+                        <div class="flex justify-between text-xs text-stone-400 font-mono mb-2">
+                            <span>Brush Thickness</span>
+                            <span id="brushSizeVal">12px</span>
+                        </div>
+                        <input type="range" id="brushSize" min="3" max="40" value="12" class="w-full accent-gallery-accent bg-gallery-border rounded-lg h-2 cursor-pointer">
+                    </div>
+
+                    <!-- Canvas Controls -->
+                    <div class="pt-4 border-t border-gallery-border space-y-3">
+                        <button id="clearCanvasBtn" class="w-full py-2.5 border border-gallery-border hover:border-red-500/50 hover:bg-red-500/10 text-stone-300 hover:text-red-400 rounded-lg text-xs uppercase tracking-wider font-medium transition-all flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-trash-can"></i> Clear Canvas
+                        </button>
+                        <button id="downloadCanvasBtn" class="w-full py-2.5 bg-gallery-accent hover:bg-yellow-400 text-black rounded-lg text-xs uppercase tracking-wider font-bold transition-all flex items-center justify-center gap-2 shadow-lg shadow-gallery-accent/10">
+                            <i class="fa-solid fa-download"></i> Save Artwork
+                        </button>
+                    </div>
+
+                    <!-- Guide Prompt -->
+                    <div class="p-4 rounded-lg bg-gallery-bg border border-gallery-border text-xs text-stone-400 space-y-2">
+                        <span class="text-gallery-accent font-semibold block font-mono">Artist Tip:</span>
+                        <p>Husain drew horses in continuous, powerful strokes without breaking the line. Draw the angled head, sharp muscular chest, and sweeping mane in single fluid gestures!</p>
+                    </div>
+                </div>
+
+                <!-- Interactive Drawing Canvas -->
+                <div class="lg:col-span-8">
+                    <div class="bg-gallery-card border border-gallery-border p-3 rounded-xl gold-border-glow">
+                        <div class="relative w-full aspect-[4/3] bg-stone-950 rounded-lg overflow-hidden cursor-crosshair">
+                            <canvas id="paintCanvas" class="w-full h-full block"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Artwork Detail Modal -->
+    <div id="artworkModal" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-md hidden items-center justify-center p-4 md:p-8">
+        <div class="bg-gallery-card border border-gallery-border max-w-4xl w-full max-h-[90vh] rounded-2xl overflow-hidden flex flex-col lg:flex-row shadow-2xl relative">
+            <!-- Close Modal Button -->
+            <button id="closeModalBtn" class="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-black/60 border border-gallery-border text-stone-300 hover:text-white flex items-center justify-center transition-all">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+
+            <!-- Modal Image Preview Panel -->
+            <div class="lg:w-1/2 bg-stone-950 p-8 flex items-center justify-center relative border-b lg:border-b-0 lg:border-r border-gallery-border">
+                <div id="modalArtGraphic" class="w-full aspect-square flex items-center justify-center">
+                    <!-- SVG graphic dynamically injected -->
+                </div>
+            </div>
+
+            <!-- Modal Details Content Panel -->
+            <div class="lg:w-1/2 p-8 overflow-y-auto space-y-6">
+                <div>
+                    <span id="modalTag" class="text-xs font-mono uppercase tracking-widest text-gallery-accent">Movement Tag</span>
+                    <h3 id="modalTitle" class="font-serif text-3xl font-bold text-stone-100 mt-1">Artwork Title</h3>
+                    <p id="modalYearMedium" class="text-stone-400 text-xs font-mono mt-1">Year • Medium</p>
+                </div>
+
+                <div class="space-y-4">
+                    <div>
+                        <h4 class="text-xs uppercase font-mono tracking-wider text-stone-400 mb-1">Historical Context & Inspiration</h4>
+                        <p id="modalDescription" class="text-stone-300 text-sm leading-relaxed">Detailed backstory of the painting...</p>
+                    </div>
+
+                    <div class="p-4 rounded-lg bg-gallery-bg border border-gallery-border/60">
+                        <h4 class="text-xs uppercase font-mono tracking-wider text-gallery-accent mb-1">Key Visual Elements</h4>
+                        <p id="modalElements" class="text-stone-400 text-xs leading-relaxed">Stroke style, palette choice, equine posture details...</p>
+                    </div>
+                </div>
+
+                <div class="pt-4 border-t border-gallery-border flex items-center justify-between">
+                    <div>
+                        <span class="text-[10px] uppercase font-mono text-stone-500">Significance</span>
+                        <span id="modalValuation" class="block text-sm font-serif text-gallery-accent font-bold">National Treasure Status</span>
+                    </div>
+                    <button id="modalAudioBtn" class="px-4 py-2 border border-gallery-border hover:border-gallery-accent rounded-lg text-xs text-stone-300 flex items-center gap-2 transition-all">
+                        <i class="fa-solid fa-headphones text-gallery-accent"></i>
+                        <span>Audio Insight</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-black border-t border-gallery-border py-12 px-6">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
+            <div>
+                <span class="font-serif text-xl font-bold text-stone-200">M.F. HUSAIN</span>
+                <p class="text-stone-500 text-xs mt-1">A Digital Tribute to the Picasso of India (1915 – 2011)</p>
+            </div>
+            
+            <div class="text-stone-500 text-xs font-mono">
+                Curated for Art Collectors, Historians & Enthusiasts
+            </div>
+
+            <div class="flex space-x-6 text-stone-400 text-lg">
+                <a href="#" class="hover:text-gallery-accent transition-colors"><i class="fa-solid fa-landmark"></i></a>
+                <a href="#" class="hover:text-gallery-accent transition-colors"><i class="fa-solid fa-palette"></i></a>
+                <a href="#" class="hover:text-gallery-accent transition-colors"><i class="fa-solid fa-book-open"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        /* ==========================================================================
+           ARTWORK DATASET - M.F. Husain Iconic Horse Artworks
+           ========================================================================== */
+        const artworksData = [
+            {
+                id: 'blue-horses',
+                title: 'Blue Horses',
+                year: '1961',
+                medium: 'Oil on Canvas',
+                category: 'expressionist',
+                tag: 'Expressionist Masterpiece',
+                description: 'One of Husain’s most celebrated works, "Blue Horses" captures equine forms rendered in cool blue hues contrasting with fiery ochre and earthy terracotta backgrounds. The indigo shades evoke deep mystery and spiritual serenity.',
+                elements: 'Thick black contour lines, contrasting indigo and warm ochre, rearing aggressive postures.',
+                valuation: 'Landmark Auction Record',
+                svgGraphic: `
+                    <svg viewBox="0 0 400 400" class="w-full h-full">
+                        <rect width="400" height="400" fill="#0c1017"/>
+                        <path d="M 60 320 Q 180 280 240 180 Q 280 120 340 80 Q 300 160 220 220 Q 160 280 80 340 Z" fill="#1e3a8a" opacity="0.8"/>
+                        <path d="M 120 350 L 180 220 L 260 160 L 320 90 L 280 170 L 220 240 L 140 370" stroke="#3b82f6" stroke-width="12" stroke-linecap="round" fill="none"/>
+                        <path d="M 260 160 L 290 80 L 330 60 L 320 110" stroke="#93c5fd" stroke-width="8" fill="#3b82f6"/>
+                        <circle cx="300" cy="85" r="5" fill="#ffffff"/>
+                        <path d="M 30 380 Q 200 320 380 360" stroke="#d4af37" stroke-width="10" stroke-linecap="round"/>
+                    </svg>
+                `
+            },
+            {
+                id: 'passage-horses',
+                title: 'Passage of Horses',
+                year: '1970',
+                medium: 'Oil & Acrylic on Canvas',
+                category: 'oil',
+                tag: 'Oils & Acrylics',
+                description: 'An explosive dynamic composition depicting a herd of horses sweeping horizontally across the canvas. Husain used swift trowel and brush strokes to convey speed and relentless momentum.',
+                elements: 'Horizontal kinetic rhythm, warm earth ochres, heavy impasto techniques.',
+                valuation: 'Private European Collection',
+                svgGraphic: `
+                    <svg viewBox="0 0 400 400" class="w-full h-full">
+                        <rect width="400" height="400" fill="#120c0a"/>
+                        <path d="M 40 220 L 120 150 L 180 120 L 280 180 L 360 140" stroke="#a84227" stroke-width="14" stroke-linecap="round" fill="none"/>
+                        <path d="M 90 260 L 170 190 L 230 150 L 330 200" stroke="#d4af37" stroke-width="10" stroke-linecap="round" fill="none"/>
+                        <path d="M 150 120 L 180 50 L 220 40 L 210 90" stroke="#f8fafc" stroke-width="8" fill="none"/>
+                        <path d="M 20 320 C 120 280 280 320 380 270" stroke="#e2e8f0" stroke-width="8" opacity="0.6"/>
+                    </svg>
+                `
+            },
+            {
+                id: 'lightning',
+                title: 'Lightning (Mural Equine)',
+                year: '1975',
+                medium: 'Oil on Canvas (60ft Mural)',
+                category: 'expressionist',
+                tag: 'Monumental Mural',
+                description: 'Originally created as a monumental 60-foot mural featuring twelve galloping horses. Represents unbridled power cutting through obstacles like a flash of lightning.',
+                elements: 'Thick jet-black outlines, high contrast white and gray bodies, jagged kinetic energy.',
+                valuation: 'Historic Museum Retrospective',
+                svgGraphic: `
+                    <svg viewBox="0 0 400 400" class="w-full h-full">
+                        <rect width="400" height="400" fill="#080808"/>
+                        <path d="M 50 350 L 150 200 L 250 180 L 350 70 L 300 180 L 220 240 L 120 380" stroke="#ffffff" stroke-width="14" stroke-linejoin="miter" fill="none"/>
+                        <path d="M 150 200 L 210 220 L 290 120 L 370 100" stroke="#d4af37" stroke-width="8" fill="none"/>
+                        <path d="M 250 180 L 280 80 L 320 60" stroke="#ffffff" stroke-width="10"/>
+                        <polygon points="180,40 220,120 190,120 230,200 150,110 180,110" fill="#d4af37" opacity="0.7"/>
+                    </svg>
+                `
+            },
+            {
+                id: 'asvamedha',
+                title: 'Asvamedha Mythological Horse',
+                year: '1988',
+                medium: 'Acrylic on Canvas',
+                category: 'mythology',
+                tag: 'Epic Mythology',
+                description: 'Inspired by the ancient Vedic royal horse sacrifice ritual. The horse here symbolizes supreme sovereignty, cosmic order, and spiritual transcendence.',
+                elements: 'Sacred Sanskrit-inspired motifs, gold leaf highlights, regal sacrificial banners.',
+                valuation: 'National Heritage Feature',
+                svgGraphic: `
+                    <svg viewBox="0 0 400 400" class="w-full h-full">
+                        <rect width="400" height="400" fill="#1a140a"/>
+                        <circle cx="200" cy="200" r="140" stroke="#d4af37" stroke-width="2" stroke-dasharray="8 8" fill="none"/>
+                        <path d="M 100 320 L 170 200 L 240 160 L 310 100 L 270 180 L 200 250 L 140 350" stroke="#d4af37" stroke-width="12" fill="none"/>
+                        <path d="M 240 160 L 270 70 L 310 60 L 300 110" stroke="#a84227" stroke-width="8" fill="#a84227"/>
+                        <circle cx="280" cy="80" r="6" fill="#fff0ca"/>
+                    </svg>
+                `
+            },
+            {
+                id: 'charcoal-gallop',
+                title: 'Untitled (Charcoal Equine Study)',
+                year: '1965',
+                medium: 'Charcoal & Ink on Paper',
+                category: 'monochrome',
+                tag: 'Charcoal & Ink',
+                description: 'A raw, intimate study showcasing Husain’s masterful speed with charcoal. With just a few spontaneous sweeps, the full weight and muscular tension of a rearing horse emerges.',
+                elements: 'Smudged charcoal shadows, sharp ink contours, stark minimalist paper background.',
+                valuation: 'Private Collection',
+                svgGraphic: `
+                    <svg viewBox="0 0 400 400" class="w-full h-full">
+                        <rect width="400" height="400" fill="#18181b"/>
+                        <path d="M 80 340 Q 160 250 220 200 T 320 100" stroke="#e2e8f0" stroke-width="16" stroke-linecap="round" fill="none" opacity="0.9"/>
+                        <path d="M 220 200 L 260 110 L 300 90 L 280 140" stroke="#a1a1aa" stroke-width="10" fill="none"/>
+                        <path d="M 60 300 L 140 230 L 200 280" stroke="#71717a" stroke-width="8" fill="none"/>
+                    </svg>
+                `
+            },
+            {
+                id: 'sun-horse',
+                title: 'Horses of the Sun Chariot',
+                year: '1994',
+                medium: 'Oil & Metallic Dust on Canvas',
+                category: 'mythology',
+                tag: 'Epic Mythology',
+                description: 'Depicting the seven horses pulling the chariot of Surya, the Sun God. Husain blended gold dust into his oil paints to create an iridescent glow.',
+                elements: 'Golden radiance, solar disk imagery, multi-equine layered silhouettes.',
+                valuation: 'International Auction Icon',
+                svgGraphic: `
+                    <svg viewBox="0 0 400 400" class="w-full h-full">
+                        <rect width="400" height="400" fill="#1f1606"/>
+                        <circle cx="280" cy="120" r="80" fill="#d4af37" opacity="0.3"/>
+                        <path d="M 60 330 L 140 220 L 220 170 L 300 110 L 260 190 L 190 260 L 120 360" stroke="#d4af37" stroke-width="12" fill="none"/>
+                        <path d="M 110 350 L 180 240 L 250 200 L 320 140" stroke="#a84227" stroke-width="8" fill="none"/>
+                    </svg>
+                `
+            }
+        ];
+
+        /* ==========================================================================
+           GALLERY RENDER & FILTERING LOGIC
+           ========================================================================== */
+        const galleryGrid = document.getElementById('galleryGrid');
+        const filterBtns = document.querySelectorAll('.filter-btn');
+
+        function renderGallery(filter = 'all') {
+            galleryGrid.innerHTML = '';
+            
+            const filteredData = filter === 'all' 
+                ? artworksData 
+                : artworksData.filter(item => item.category === filter);
+
+            filteredData.forEach(art => {
+                const card = document.createElement('div');
+                card.className = 'bg-gallery-card border border-gallery-border/80 rounded-xl overflow-hidden hover:border-gallery-accent/60 transition-all duration-300 group cursor-pointer flex flex-col';
+                card.onclick = () => openArtworkModal(art);
+
+                card.innerHTML = `
+                    <div class="relative aspect-square bg-stone-950 flex items-center justify-center p-6 overflow-hidden">
+                        <div class="w-full h-full transform group-hover:scale-105 transition-transform duration-500">
+                            ${art.svgGraphic}
+                        </div>
+                        <span class="absolute top-3 left-3 bg-black/70 backdrop-blur-sm border border-gallery-border text-gallery-accent text-[10px] font-mono px-2.5 py-1 rounded">
+                            ${art.tag}
+                        </span>
+                    </div>
+                    <div class="p-6 flex-1 flex flex-col justify-between">
+                        <div>
+                            <h3 class="font-serif text-2xl font-bold text-stone-100 group-hover:text-gallery-accent transition-colors">${art.title}</h3>
+                            <p class="text-stone-400 text-xs font-mono mt-1">${art.year} • ${art.medium}</p>
+                            <p class="text-stone-400 text-sm mt-3 line-clamp-2 font-light">${art.description}</p>
+                        </div>
+                        <div class="pt-4 mt-4 border-t border-gallery-border/50 flex items-center justify-between text-xs text-gallery-accent">
+                            <span class="font-medium">Inspect Masterpiece</span>
+                            <i class="fa-solid fa-arrow-right transform group-hover:translate-x-1 transition-transform"></i>
+                        </div>
+                    </div>
+                `;
+                galleryGrid.appendChild(card);
+            });
+        }
+
+        // Filter button click handler
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => {
+                    b.classList.remove('bg-gallery-accent', 'text-black');
+                    b.classList.add('bg-gallery-card', 'text-stone-300', 'border', 'border-gallery-border');
+                });
+                btn.classList.remove('bg-gallery-card', 'text-stone-300', 'border', 'border-gallery-border');
+                btn.classList.add('bg-gallery-accent', 'text-black');
+
+                const filterVal = btn.getAttribute('data-filter');
+                renderGallery(filterVal);
+            });
+        });
+
+        /* ==========================================================================
+           MODAL INSPECTOR LOGIC
+           ========================================================================== */
+        const modal = document.getElementById('artworkModal');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+
+        function openArtworkModal(art) {
+            document.getElementById('modalTag').innerText = art.tag;
+            document.getElementById('modalTitle').innerText = art.title;
+            document.getElementById('modalYearMedium').innerText = `${art.year} • ${art.medium}`;
+            document.getElementById('modalDescription').innerText = art.description;
+            document.getElementById('modalElements').innerText = art.elements;
+            document.getElementById('modalValuation').innerText = art.valuation;
+            document.getElementById('modalArtGraphic').innerHTML = art.svgGraphic;
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.body.style.overflow = 'hidden';
+        }
+
+        closeModalBtn.addEventListener('click', closeModal);
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal();
+        });
+
+        function closeModal() {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            document.body.style.overflow = 'auto';
+        }
+
+        /* ==========================================================================
+           AMBIENT AUDIO GENERATOR (Web Audio API Synthesizer)
+           ========================================================================== */
+        let audioCtx = null;
+        let isAudioPlaying = false;
+        let droneOscillator = null;
+        let gainNode = null;
+
+        const audioToggleBtn = document.getElementById('audioToggleBtn');
+        const audioIcon = document.getElementById('audioIcon');
+        const audioText = document.getElementById('audioText');
+
+        function toggleAmbiance() {
+            if (!isAudioPlaying) {
+                if (!audioCtx) {
+                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                
+                // Create a soothing Indian tanpura-inspired gallery ambient drone
+                droneOscillator = audioCtx.createOscillator();
+                gainNode = audioCtx.createGain();
+
+                droneOscillator.type = 'sine';
+                droneOscillator.frequency.setValueAtTime(110, audioCtx.currentTime); // Low A note
+
+                // Gentle pulsing LFO
+                const lfo = audioCtx.createOscillator();
+                lfo.frequency.value = 0.2; // Slow pulse
+                const lfoGain = audioCtx.createGain();
+                lfoGain.gain.value = 0.03;
+
+                lfo.connect(droneOscillator.frequency);
+                droneOscillator.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+
+                gainNode.gain.setValueAtTime(0.01, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.08, audioCtx.currentTime + 3);
+
+                droneOscillator.start();
+                lfo.start();
+
+                isAudioPlaying = true;
+                audioIcon.className = "fa-solid fa-volume-high text-gallery-accent";
+                audioText.innerText = "Gallery Ambiance: Active";
+                audioToggleBtn.classList.add('border-gallery-accent');
+            } else {
+                if (gainNode) {
+                    gainNode.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 1);
+                    setTimeout(() => {
+                        droneOscillator.stop();
+                    }, 1000);
+                }
+                isAudioPlaying = false;
+                audioIcon.className = "fa-solid fa-volume-xmark text-gallery-accent";
+                audioText.innerText = "Gallery Ambiance: Off";
+                audioToggleBtn.classList.remove('border-gallery-accent');
+            }
+        }
+
+        audioToggleBtn.addEventListener('click', toggleAmbiance);
+
+        /* ==========================================================================
+           INTERACTIVE STUDIO CANVAS LOGIC
+           ========================================================================== */
+        const canvas = document.getElementById('paintCanvas');
+        const ctx = canvas.getContext('2d');
+        const brushSizeInput = document.getElementById('brushSize');
+        const brushSizeVal = document.getElementById('brushSizeVal');
+        const clearCanvasBtn = document.getElementById('clearCanvasBtn');
+        const downloadCanvasBtn = document.getElementById('downloadCanvasBtn');
+        const colorBtns = document.querySelectorAll('.color-btn');
+
+        let isDrawing = false;
+        let currentColor = '#D4AF37';
+        let currentBrushSize = 12;
+
+        function resizeCanvas() {
+            const rect = canvas.parentElement.getBoundingClientRect();
+            canvas.width = rect.width;
+            canvas.height = rect.height;
+            // Background fill
+            ctx.fillStyle = '#0a0908';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
+
+        window.addEventListener('load', () => {
+            resizeCanvas();
+            renderGallery();
+        });
+        window.addEventListener('resize', resizeCanvas);
+
+        // Brush size update
+        brushSizeInput.addEventListener('input', (e) => {
+            currentBrushSize = e.target.value;
+            brushSizeVal.innerText = `${currentBrushSize}px`;
+        });
+
+        // Color selection
+        colorBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                colorBtns.forEach(b => b.classList.remove('ring-2', 'ring-offset-2', 'ring-offset-gallery-card', 'ring-gallery-accent'));
+                btn.classList.add('ring-2', 'ring-offset-2', 'ring-offset-gallery-card', 'ring-gallery-accent');
+                currentColor = btn.getAttribute('data-color');
+            });
+        });
+
+        // Drawing Event Listeners
+        function startDrawing(e) {
+            isDrawing = true;
+            draw(e);
+        }
+
+        function stopDrawing() {
+            isDrawing = false;
+            ctx.beginPath();
+        }
+
+        function draw(e) {
+            if (!isDrawing) return;
+
+            const rect = canvas.getBoundingClientRect();
+            const x = (e.clientX || e.touches[0].clientX) - rect.left;
+            const y = (e.clientY || e.touches[0].clientY) - rect.top;
+
+            ctx.lineWidth = currentBrushSize;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            ctx.strokeStyle = currentColor;
+
+            ctx.lineTo(x, y);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+        }
+
+        canvas.addEventListener('mousedown', startDrawing);
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('mouseup', stopDrawing);
+        canvas.addEventListener('mouseleave', stopDrawing);
+
+        canvas.addEventListener('touchstart', (e) => { e.preventDefault(); startDrawing(e); });
+        canvas.addEventListener('touchmove', (e) => { e.preventDefault(); draw(e); });
+        canvas.addEventListener('touchend', stopDrawing);
+
+        // Clear Canvas
+        clearCanvasBtn.addEventListener('click', () => {
+            ctx.fillStyle = '#0a0908';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        });
+
+        // Save Canvas Artwork
+        downloadCanvasBtn.addEventListener('click', () => {
+            const link = document.createElement('a');
+            link.download = 'Husain-Style-Horse-Artwork.png';
+            link.href = canvas.toDataURL();
+            link.click();
+        });
+
+        /* ==========================================================================
+           MOBILE MENU TOGGLE
+           ========================================================================== */
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+            mobileMenu.classList.toggle('flex');
+        });
+    </script>
+</body>
+</html>
